@@ -12,19 +12,6 @@ module.exports = {
     libraryTarget: 'var'
   },
   module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            query: {
-              presets: ['env']
-            }
-          }
-        ]
-      }
-    ]
   },
   externals: {
     'text-encoding': 'TextEncoder',
