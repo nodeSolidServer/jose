@@ -16,14 +16,13 @@
     "clean-lib": "rm -rf lib/*",
     "build-dist": "webpack --progress",
     "dist": "npm run build && npm run build-dist",
-    "prepublish": "npm run build && npm run build-dist",
+    "prepare": "npm run build && npm run build-dist",
     "test": "mocha test",
-    "karma": "karma start",
     "jsdoc": "jsdoc -c jsdoc.json -r"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/anvilresearch/jose.git"
+    "url": "https://github.com/solid/jose.git"
   },
   "author": "",
   "contributors": [
@@ -44,9 +43,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/anvilresearch/jose/issues"
+    "url": "https://github.com/solid/jose/issues"
   },
-  "homepage": "https://github.com/anvilresearch/jose#README",
+  "homepage": "https://github.com/solid/jose#README",
   "dependencies": {
     "base64url": "^3.0.0",
     "@trust/json-document": "^0.1.4",
@@ -55,17 +54,12 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
-    "karma": "^2.0.2",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-mocha": "^1.3.0",
-    "karma-webpack": "^3.0.0",
     "mocha": "^5.2.0",
     "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.4"
+    "webpack-cli": "^3.0.2"
   }
 }
