@@ -2,7 +2,7 @@ docs
 node_modules
 
 # Compiled lib directory
-# lib
+lib
 
 # Bundles created by Webpack
 dist
