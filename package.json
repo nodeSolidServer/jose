@@ -2,21 +2,18 @@
   "name": "@solid/jose",
   "version": "0.1.8",
   "description": "JSON Object Signing and Encryption",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "directories": {
     "test": "test"
   },
   "files": [
-    "lib",
+    "src",
     "dist"
   ],
   "scripts": {
-    "build-lib": "babel src -d lib",
-    "build": "npm run clean-lib && npm run build-lib",
-    "clean-lib": "rm -rf lib/*",
     "build-dist": "webpack --progress",
-    "dist": "npm run build && npm run build-dist",
-    "prepare": "npm run build && npm run build-dist",
+    "dist": "npm run build-dist",
+    "prepare": "npm run build-dist",
     "test": "mocha test",
     "jsdoc": "jsdoc -c jsdoc.json -r"
   },
