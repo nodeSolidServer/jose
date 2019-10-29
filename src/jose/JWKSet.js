@@ -3,8 +3,6 @@
 /**
  * Dependencies
  */
-const {JSONDocument} = require('@trust/json-document')
-const JWKSetSchema = require('../schemas/JWKSetSchema')
 const JWK = require('./JWK')
 
 /**
@@ -14,26 +12,15 @@ const JWK = require('./JWK')
  * JWKSet represents a JSON Web Key Set as described in Section 5 of RFC 7517:
  * https://tools.ietf.org/html/rfc7517#section-5
  */
-class JWKSet extends JSONDocument {
-
-  /**
-   * schema
-   */
-  static get schema () {
-    return JWKSetSchema
+class JWKSet {
+  constructor ({ keys } = {}) {
+    this.keys = keys
   }
 
   /**
    * importKeys
    */
-  static importKeys (jwks) {
-    let validation = this.schema.validate(jwks)
-
-    if (!validation.valid) {
-      return Promise.reject(new Error('Invalid JWKSet: ' +
-        JSON.stringify(validation, null, 2)))
-    }
-
+  static async importKeys (jwks) {
     if (!jwks.keys) {
       return Promise.reject(new Error('Cannot import JWKSet: keys property is empty'))
     }

@@ -5,7 +5,6 @@
 - [x] Based on Webcrypto API
 - [ ] CryptoKey as expected key argument
 - [x] Isomorphic (Node.js and Browser)
-- [ ] JWT Header and Payload Validation with JSON Schema
 - [ ] Extensible JWT/JWS/JWE classes
 
 ## Dependencies

@@ -15,7 +15,6 @@ let expect = chai.expect
  * Code under test
  */
 const JWKSet = require('../../src/jose/JWKSet')
-const JWKSetSchema = require('../../src/schemas/JWKSetSchema')
 
 const jwks1 = `{
   "keys": [
@@ -37,10 +36,6 @@ const jwks1 = `{
  * Tests
  */
 describe('JWKSet', () => {
-  describe('schema', () => {
-    it('should return JWKSetSchema')
-  })
-
   describe('importKeys', () => {
     it('should return a promise')
 

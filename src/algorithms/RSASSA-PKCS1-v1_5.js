@@ -85,7 +85,7 @@ class RSASSA_PKCS1_v1_5 {
    * @param {JWK} key
    * @returns {Promise}
    */
-  importKey (key) {
+  async importKey (key) {
     let jwk = Object.assign({}, key)
     let algorithm = this.params
     let usages = key['key_ops'] || []

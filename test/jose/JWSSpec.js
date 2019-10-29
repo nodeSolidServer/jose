@@ -4,17 +4,18 @@
  * Test dependencies
  */
 const chai = require('chai')
+const { expect } = chai
 
 /**
  * Assertions
  */
 chai.should()
-let expect = chai.expect
+// let expect = chai.expect
 
 /**
  * Code under test
  */
-const crypto = require('@trust/webcrypto')
+// const crypto = require('@trust/webcrypto')
 const JWS = require('../../src/jose/JWS')
 const {DataError} = require('../../src/errors')
 const {RsaPrivateCryptoKey, RsaPublicCryptoKey} = require('../keys')
@@ -75,12 +76,16 @@ describe('JWS', () => {
         }
       })
 
-      it('should return a promise', () => {
-        return JWS.sign(token).should.be.rejected
-      })
+      it('should reject with a DataError', async () => {
+        let dataError
 
-      it('should reject a DataError', () => {
-        return JWS.sign(token).should.be.rejectedWith(DataError)
+        try {
+          await JWS.sign(token)
+        } catch (error) {
+          dataError = error
+        }
+
+        expect(dataError instanceof DataError).to.be.true
       })
     })
   })
@@ -106,12 +111,8 @@ describe('JWS', () => {
         }
       })
 
-      it('should return a promise', () => {
-        return JWS.verify(jwt).should.be.fulfilled
-      })
-
-      it('should resolve a boolean', () => {
-        return JWS.verify(jwt).should.eventually.equal(true)
+      it('should resolve with a boolean', async () => {
+        expect(await JWS.verify(jwt)).to.be.true
       })
 
       it('should set JWT verified property', () => {
@@ -137,12 +138,16 @@ describe('JWS', () => {
         }
       })
 
-      it('should return a promise', () => {
-        return JWS.verify(jwt).should.be.rejected
-      })
+      it('should reject a DataError', async () => {
+        let dataError
 
-      it('should reject a DataError', () => {
-        return JWS.verify(jwt).should.be.rejectedWith(DataError)
+        try {
+          await JWS.verify(jwt)
+        } catch (error) {
+          dataError = error
+        }
+
+        expect(dataError instanceof DataError).to.be.true
       })
     })
   })

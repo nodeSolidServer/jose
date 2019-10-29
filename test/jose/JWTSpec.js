@@ -16,7 +16,6 @@ let expect = chai.expect
  * Code under test
  */
 const JWT = require('../../src/jose/JWT')
-const { JWTSchema } = require('../../src/schemas/index')
 const {RsaPrivateCryptoKey, RsaPublicCryptoKey} = require('../keys')
 
 /**
@@ -32,16 +31,6 @@ const compactUnsecured = 'eyJhbGciOiJub25lIn0.eyJpc3MiOiJodHRwczovL2ZvcmdlLmFudm
  * Tests
  */
 describe('JWT', () => {
-
-  /**
-   * schema
-   */
-  describe('schema', () => {
-    it('should return JWTSchema', () => {
-      JWT.schema.should.equal(JWTSchema)
-    })
-  })
-
   /**
    * static decode
    */
@@ -85,8 +74,9 @@ describe('JWT', () => {
       })
 
       it('should set JWT header', () => {
-        JWT.decode(compact).header
-          .should.eql({ alg: 'RS256', kid: 'r4nd0mbyt3s' })
+        const { header } = JWT.decode(compact)
+        expect(header).to.have.property('alg', 'RS256')
+        expect(header).to.have.property('kid', 'r4nd0mbyt3s')
       })
 
       it('should set JWT payload', () => {
@@ -112,7 +102,7 @@ describe('JWT', () => {
         })
 
         it('should have a header with alg: none', () => {
-          expect(decoded.header).to.eql({ alg: 'none' })
+          expect(decoded.header).to.have.property('alg', 'none')
         })
 
         it('should have a payload', () => {
@@ -194,24 +184,16 @@ describe('JWT', () => {
    * encode
    */
   describe('encode', () => {
-    it('should reject invalid JWT', () => {
-      let jwt = new JWT({
-        header: { alg: 'RS256', kid: 'r4nd0mbyt3s' },
-        payload: { iss: null },
-        key: RsaPrivateCryptoKey
-      })
-
-      return jwt.encode().should.be.rejected()
-    })
-
-    it('should resolve a JWS Compact Serialization', () => {
-      let jwt = new JWT({
+    it('should resolve a JWS Compact Serialization', async () => {
+      const jwt = new JWT({
         header: { alg: 'RS256', kid: 'r4nd0mbyt3s' },
         payload: { iss: 'https://forge.anvil.io' },
         key: RsaPrivateCryptoKey
       })
 
-      return jwt.encode().should.eventually.equal(compact)
+      const result = await jwt.encode()
+
+      result.should.equal(compact)
     })
 
     describe('unsecured (alg: none)', () => {

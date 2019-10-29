@@ -9,12 +9,12 @@ const chai = require('chai')
  * Assertions
  */
 chai.should()
-let expect = chai.expect
+// let expect = chai.expect
 
 /**
  * Code under test
  */
-const crypto = require('@trust/webcrypto')
+// const crypto = require('@trust/webcrypto')
 const base64url = require('base64url')
 const RSASSA_PKCS1_v1_5 = require('../../src/algorithms/RSASSA-PKCS1-v1_5')
 const {RsaPrivateCryptoKey, RsaPublicCryptoKey, RsaPrivateJwk} = require('../keys')
