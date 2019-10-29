@@ -15,7 +15,7 @@ module.exports = {
   },
   externals: {
     'text-encoding': 'TextEncoder',
-    '@trust/webcrypto': 'crypto'
+    'isomorphic-webcrypto': 'crypto'
   },
   devtool: 'source-map'
 }

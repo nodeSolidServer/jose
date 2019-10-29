@@ -1,5 +1,5 @@
 require('../src/formats')
-const crypto = require('@trust/webcrypto')
+const crypto = require('isomorphic-webcrypto')
 const JWT = require('../src/jose/JWT')
 
 let key, jwt

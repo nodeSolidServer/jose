@@ -45,8 +45,8 @@
   "homepage": "https://github.com/solid/jose#README",
   "dependencies": {
     "base64url": "^3.0.0",
-    "text-encoding": "^0.6.4",
-    "@trust/webcrypto": "^0.9.2"
+    "isomorphic-webcrypto": "^2.3.2",
+    "text-encoding": "^0.6.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
