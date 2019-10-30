@@ -14,7 +14,7 @@ module.exports = {
   module: {
   },
   externals: {
-    'text-encoding': 'TextEncoder',
+    '@sinonjs/text-encoding': 'TextEncoder',
     'isomorphic-webcrypto': 'crypto'
   },
   devtool: 'source-map'
