@@ -1,4 +1,4 @@
-const crypto = require('@trust/webcrypto')
+const crypto = require('isomorphic-webcrypto')
 const JWA = require('../src/jose/JWA')
 
 let key

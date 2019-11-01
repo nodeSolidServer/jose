@@ -1,4 +1,4 @@
-const CryptoKey = require('@trust/webcrypto/src/keys/CryptoKey')
+const RSASSA_PKCS1_v1_5 = require('../../src/algorithms/RSASSA-PKCS1-v1_5')
 
 /**
  * RsaPrivateKey
@@ -37,6 +37,8 @@ rrdlkni8537vUl2rwiG3U3LTi9vHMIbBQek5rxlbc8jS8ejGUFdc
  */
 const RsaPrivateJwk = {
   kty: 'RSA',
+  alg: 'RS256',
+  ext: false,
   n: 'iEJoO1tBT1Yc9jdYWI5JUkMnOlFD-weoi1rkxsWvZoBRJJGifjrdmIn_5xOaaW38Cg535lo6NEorsVsq7V6zGan2QCT1TRCb7vJq4UIEq6tL5uB0BZMyByKBYDKVGAinXYd502nJ1T7sbZQnSjZFC3HgDvrqb_4bDIbO0-sAiaTumt-2uyIYcGYBuIfTi8vmElz2ngUFh-8K_uQyH7YjrOrg6ThOldh8IVzaOSA7LAb_DjyC-H44F_J24qMRLGuWK53gz-2RazSBotiNUsGoxdZv30Sud3Yfbz9ZjSXxPWpRnG6mZAZW76oSbn8FvTSTWrf0iU6MyNkv_QuAjF-1BQ',
   e: 'AQAB',
   d: 'dvcbz-8Np3n00Vdi7_ZSt9rfrf_zzYFTO1BBe_Zu_Jw9vCLW70Tv4lViMtsfrrsTGaimMF1Iggzb9v41DYfn8Rk-YaSi8wT0T_whKsicEVH-c_Y19gQc4rPSpy2ilJhBn9w_lkC_sko83DNE1ntpbuOejxWth9ggv6AXhligYIt0h3DasVqhtkUa1RDUBKm4EhLc0BCPFAtN2XONRcKqoTTZUpVboKGv9k8OeyMOZXFmNjn68uhlHJLiNYFHrh-BWsD4WgIWq1sqHldkIZRJGEZizTpcuWeMuf3V-2A7oOLcVtDZ3iesxGQPxyI4-_WJqjjb3ApOGIKFOB7QNEXlIQ',
@@ -46,17 +48,6 @@ const RsaPrivateJwk = {
   dq: 'MbqQxxwTbMRGoB9SIOGIKKFn3ldLi6-hW0bNptv95Cjnn_ebSMU9y9Vk2FST-fNqNHXHaSqzgRTwg2WSZzgPBBPdHnZHskC8Q8EII5Y0z6iwkvLArOt4TeiG8hg4vaBY46r5vnteF7jLcbGgxNUqNbeje-vJ8KHE0g-8IHYmxIk',
   qi: 'lXeBzCAWAADq3ybuDhhK0MoA0meC2118dkLUiEYU60o9z-ud6huAMK3jyDD1tAPyDLzuVpFv-GOb_QDPhuO0MM6QpjnKEJS2KmenHgVHXacZGYx9EZ50smGut2WSeLznfu9SXavCIbdTctOL28cwhsFB6TmvGVtzyNLx6MZQV1w'
 }
-
-/**
- * RsaPrivateCryptoKey
- */
-const RsaPrivateCryptoKey = new CryptoKey({
-  type: 'private',
-  algorithm: { name: 'RSASSA-PKCS1-v1_5' },
-  extractable: false,
-  usages: ['sign'],
-  handle: RsaPrivateKey
-})
 
 /**
  * RsaPublicKey
@@ -77,31 +68,36 @@ BQIDAQAB
  */
 const RsaPublicJwk = {
   kty: 'RSA',
+  alg: 'RS256',
+  ext: true,
   n: 'iEJoO1tBT1Yc9jdYWI5JUkMnOlFD-weoi1rkxsWvZoBRJJGifjrdmIn_5xOaaW38Cg535lo6NEorsVsq7V6zGan2QCT1TRCb7vJq4UIEq6tL5uB0BZMyByKBYDKVGAinXYd502nJ1T7sbZQnSjZFC3HgDvrqb_4bDIbO0-sAiaTumt-2uyIYcGYBuIfTi8vmElz2ngUFh-8K_uQyH7YjrOrg6ThOldh8IVzaOSA7LAb_DjyC-H44F_J24qMRLGuWK53gz-2RazSBotiNUsGoxdZv30Sud3Yfbz9ZjSXxPWpRnG6mZAZW76oSbn8FvTSTWrf0iU6MyNkv_QuAjF-1BQ',
   e: 'AQAB'
 }
 
-/**
- * RsaPrivateCryptoKey
- */
-const RsaPublicCryptoKey = new CryptoKey({
-  type: 'public',
-  algorithm: { name: 'RSASSA-PKCS1-v1_5' },
-  extractable: true,
-  usages: ['verify'],
-  handle: RsaPublicKey
-})
+async function getPublicKey () {
+  const alg = { name: 'RSASSA-PKCS1-v1_5', hash: { name: 'SHA-256' } }
+  const rsa = new RSASSA_PKCS1_v1_5(alg)
+
+  const publicJwk = Object.assign({ key_ops: ['verify'] }, RsaPublicJwk)
+  return (await rsa.importKey(publicJwk)).cryptoKey
+}
+
+async function getPrivateKey () {
+  const alg = { name: 'RSASSA-PKCS1-v1_5', hash: { name: 'SHA-256' } }
+  const rsa = new RSASSA_PKCS1_v1_5(alg)
+
+  const privateJwk = Object.assign({ key_ops: ['sign'] }, RsaPrivateJwk)
+  return (await rsa.importKey(privateJwk)).cryptoKey
+}
 
 /**
  * Export
  */
 module.exports = {
-  RsaPrivateKey,
   RsaPrivateJwk,
-  RsaPrivateCryptoKey,
-  RsaPublicKey,
   RsaPublicJwk,
-  RsaPublicCryptoKey
+  getPublicKey,
+  getPrivateKey
 }
 
 

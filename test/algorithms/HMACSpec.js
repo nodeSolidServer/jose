@@ -15,8 +15,8 @@ let expect = chai.expect
  * Code under test
  */
 const HMAC = require('../../src/algorithms/HMAC')
-const {TextEncoder} = require('text-encoding')
-const crypto = require('@trust/webcrypto')
+const {TextEncoder} = require('@sinonjs/text-encoding')
+const crypto = require('isomorphic-webcrypto')
 const base64url = require('base64url')
 
 /**

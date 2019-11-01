@@ -44,9 +44,9 @@
   },
   "homepage": "https://github.com/solid/jose#README",
   "dependencies": {
+    "@sinonjs/text-encoding": "^0.7.1",
     "base64url": "^3.0.0",
-    "text-encoding": "^0.6.4",
-    "@trust/webcrypto": "^0.9.2"
+    "isomorphic-webcrypto": "^2.3.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -54,7 +54,7 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
-    "mocha": "^5.2.0",
+    "mocha": "^6.2.2",
     "webpack": "^4.8.3",
     "webpack-cli": "^3.0.2"
   }
