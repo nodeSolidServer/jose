@@ -9,21 +9,19 @@ const chai = require('chai')
  * Assertions
  */
 chai.should()
-let expect = chai.expect
+// let expect = chai.expect
 
 /**
  * Code under test
  */
-const crypto = require('@trust/webcrypto')
 const base64url = require('base64url')
 const RSASSA_PKCS1_v1_5 = require('../../src/algorithms/RSASSA-PKCS1-v1_5')
-const {RsaPrivateCryptoKey, RsaPublicCryptoKey, RsaPrivateJwk} = require('../keys')
+const { getPublicKey, getPrivateKey } = require('../keys')
 
 /**
  * Tests
  */
 describe('RSASSA_PKCS1_v1_5', () => {
-
   /**
    * constructor
    */
@@ -39,11 +37,11 @@ describe('RSASSA_PKCS1_v1_5', () => {
    * sign
    */
   describe('sign', () => {
-    let alg, rsa, data, chromeRsaSignature
+    const alg = { name: 'RSASSA-PKCS1-v1_5', hash: { name: 'SHA-256' } }
+    let data, chromeRsaSignature, privateKey
 
-    before(() => {
-      alg = { name: "RSASSA-PKCS1-v1_5", hash: { name: 'SHA-256' } }
-      rsa = new RSASSA_PKCS1_v1_5(alg)
+    before(async () => {
+      privateKey = await getPrivateKey()
 
       data = 'signed with Chrome webcrypto'
 
@@ -69,16 +67,11 @@ describe('RSASSA_PKCS1_v1_5', () => {
       ])
     })
 
-    it('should return a promise', () => {
-      let rsa = new RSASSA_PKCS1_v1_5(alg)
-      rsa.sign(RsaPrivateCryptoKey, data).should.be.instanceof(Promise)
-    })
-
     it('should reject an insufficient key length')
 
     it('should resolve a base64url encoded value', () => {
       let rsa = new RSASSA_PKCS1_v1_5(alg)
-      return rsa.sign(RsaPrivateCryptoKey, data)
+      return rsa.sign(privateKey, data)
         .then(signature => {
           base64url.toBuffer(signature)
             .should.eql(Buffer.from(chromeRsaSignature))
@@ -90,55 +83,23 @@ describe('RSASSA_PKCS1_v1_5', () => {
    * verify
    */
   describe('verify', () => {
-    let alg, rsa, data, signature
+    const alg = { name: 'RSASSA-PKCS1-v1_5', hash: { name: 'SHA-256' } }
+    let data, signature, publicKey
 
-    before(() => {
-      alg = { name: "RSASSA-PKCS1-v1_5", hash: { name: 'SHA-256' } }
-
-      rsa = new RSASSA_PKCS1_v1_5(alg)
+    before(async () => {
+      publicKey = await getPublicKey()
 
       data ='signed with Chrome webcrypto'
 
       signature = 'VLW6eetMx2aufbDYXr7zydty4z02wu0O-Mx4bfnc5VAsMFaFYIFV1UYTfgCgWxK5yGa0tUUborW9brxwfF050FuOtsBXp8FvWAX0bMiWhUSQ0Bub3tW94JzifEGyRUc_840DftHtLbPw_8L1K5R7YazvqN0sukjCHQmrZ322J1-jUAPQuLgwcocHb3ImGRzqUhIxcRT7O5POB4YPvcn98XjsOuuUG8zppR8b3xwK1p9tuu9HfhI_b8Zz4u2RGgx4OKYNw0ELcpWR__Jhvv_K25BT7vC2UqXldpIdX39MvPeK_kgS-yp2nOVCCGo3alPo6hfDoKeFDrV-BSSdAlGQUw'
     })
 
-    it('should return a promise', () => {
+    it('should resolve a boolean', async () => {
       let rsa = new RSASSA_PKCS1_v1_5(alg)
-      rsa.verify(RsaPublicCryptoKey, signature, data)
-        .should.be.instanceof(Promise)
-    })
-
-    it('should resolve a boolean', () => {
-      let rsa = new RSASSA_PKCS1_v1_5(alg)
-      return rsa.verify(RsaPublicCryptoKey, signature, data)
+      return rsa.verify(publicKey, signature, data)
         .then(verified => {
           verified.should.equal(true)
         })
-    })
-  })
-
-  /**
-   * importKey
-   */
-  describe('importKey', () => {
-    let promise, result
-
-    before(() => {
-      let alg = { name: "RSASSA-PKCS1-v1_5", hash: { name: 'SHA-256' } }
-      let rsa = new RSASSA_PKCS1_v1_5(alg)
-      promise = rsa.importKey(RsaPrivateJwk).then(jwk => result = jwk)
-    })
-
-    it('should return a promise', () => {
-      promise.should.be.instanceof(Promise)
-    })
-
-    it('should resolve a JWK', () => {
-      result.should.eql(RsaPrivateJwk)
-    })
-
-    it('should resolve a JWK with CryptoKey property', () => {
-      result.cryptoKey.constructor.name.should.equal('CryptoKey')
     })
   })
 })

@@ -4,20 +4,21 @@
  * Test dependencies
  */
 const chai = require('chai')
+const { expect } = chai
 
 /**
  * Assertions
  */
 chai.should()
-let expect = chai.expect
+// let expect = chai.expect
 
 /**
  * Code under test
  */
-const crypto = require('@trust/webcrypto')
+// const crypto = require('isomorphic-webcrypto')
 const JWS = require('../../src/jose/JWS')
-const {DataError} = require('../../src/errors')
-const {RsaPrivateCryptoKey, RsaPublicCryptoKey} = require('../keys')
+const { DataError } = require('../../src/errors')
+const { getPublicKey, getPrivateKey } = require('../keys')
 
 /**
  * Tests
@@ -31,12 +32,12 @@ describe('JWS', () => {
     describe('Compact Serialization', () => {
       let token, compact
 
-      before(() => {
+      before(async () => {
         token = {
           serialization: 'compact',
           header: { alg: 'RS256', kid: 'r4nd0mbyt3s' },
           payload: { iss: 'https://forge.anvil.io' },
-          key: RsaPrivateCryptoKey
+          key: await getPrivateKey()
         }
 
         compact = 'eyJhbGciOiJSUzI1NiIsImtpZCI6InI0bmQwbWJ5dDNzIn0.eyJpc3MiOiJodHRwczovL2ZvcmdlLmFudmlsLmlvIn0.FMer-lRR4Q4BVivMc9sl-jF3c-QWEenlH2pcW9oXTsiPRSEzc7lgPEryuXTimoToSKwWFgVpnjXKnmBaTaPVLpuRUMwGUeIUdQu0bQC-XEo-TKlwlqtUgelQcF2viEQwxU04UQaXWBh9ZDTIOutfXcjyhEPiMfCFLxT_aotR0zipmAi825lF1qBmxKrCv4c_9_46ACuaeuET6t0XvcAMDf3fjkEdw_0KPN2wnAlp2AwPP05D8Nwn8NqDAlljdN7bjnO99uJvhNWbvZgBYfhNXkMeDVJcukv0j3Cz6LCgedbXdX0rzJv_4qkO6l-LU9QeK1s0kwHfRUIWoa0TLJ4FtQ'
@@ -66,21 +67,25 @@ describe('JWS', () => {
     describe('Unsupported Serialization', () => {
       let token
 
-      before(() => {
+      before(async () => {
         token = {
           serialization: 'unsupported',
           header: { alg: 'RS256', kid: 'r4nd0mbyt3s' },
           payload: { iss: 'https://forge.anvil.io' },
-          key: RsaPrivateCryptoKey
+          key: await getPrivateKey()
         }
       })
 
-      it('should return a promise', () => {
-        return JWS.sign(token).should.be.rejected
-      })
+      it('should reject with a DataError', async () => {
+        let dataError
 
-      it('should reject a DataError', () => {
-        return JWS.sign(token).should.be.rejectedWith(DataError)
+        try {
+          await JWS.sign(token)
+        } catch (error) {
+          dataError = error
+        }
+
+        expect(dataError instanceof DataError).to.be.true
       })
     })
   })
@@ -92,7 +97,7 @@ describe('JWS', () => {
     describe('Compact Serialization', () => {
       let jwt, signature
 
-      before(() => {
+      before(async () => {
         signature = 'FMer-lRR4Q4BVivMc9sl-jF3c-QWEenlH2pcW9oXTsiPRSEzc7lgPEryuXTimoToSKwWFgVpnjXKnmBaTaPVLpuRUMwGUeIUdQu0bQC-XEo-TKlwlqtUgelQcF2viEQwxU04UQaXWBh9ZDTIOutfXcjyhEPiMfCFLxT_aotR0zipmAi825lF1qBmxKrCv4c_9_46ACuaeuET6t0XvcAMDf3fjkEdw_0KPN2wnAlp2AwPP05D8Nwn8NqDAlljdN7bjnO99uJvhNWbvZgBYfhNXkMeDVJcukv0j3Cz6LCgedbXdX0rzJv_4qkO6l-LU9QeK1s0kwHfRUIWoa0TLJ4FtQ'
         jwt = {
           header: { alg: 'RS256' },
@@ -102,16 +107,12 @@ describe('JWS', () => {
             'eyJpc3MiOiJodHRwczovL2ZvcmdlLmFudmlsLmlvIn0',
             signature
           ],
-          key: RsaPublicCryptoKey
+          key: await getPublicKey()
         }
       })
 
-      it('should return a promise', () => {
-        return JWS.verify(jwt).should.be.fulfilled
-      })
-
-      it('should resolve a boolean', () => {
-        return JWS.verify(jwt).should.eventually.equal(true)
+      it('should resolve with a boolean', async () => {
+        expect(await JWS.verify(jwt)).to.be.true
       })
 
       it('should set JWT verified property', () => {
@@ -130,19 +131,23 @@ describe('JWS', () => {
     describe('missing signature(s)', () => {
       let jwt
 
-      before(() => {
+      before(async () => {
         jwt = {
           header: { alg: 'RS256' },
-          key: RsaPublicCryptoKey
+          key: await getPublicKey()
         }
       })
 
-      it('should return a promise', () => {
-        return JWS.verify(jwt).should.be.rejected
-      })
+      it('should reject a DataError', async () => {
+        let dataError
 
-      it('should reject a DataError', () => {
-        return JWS.verify(jwt).should.be.rejectedWith(DataError)
+        try {
+          await JWS.verify(jwt)
+        } catch (error) {
+          dataError = error
+        }
+
+        expect(dataError instanceof DataError).to.be.true
       })
     })
   })

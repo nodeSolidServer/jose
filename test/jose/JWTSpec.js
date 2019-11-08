@@ -16,8 +16,7 @@ let expect = chai.expect
  * Code under test
  */
 const JWT = require('../../src/jose/JWT')
-const { JWTSchema } = require('../../src/schemas/index')
-const {RsaPrivateCryptoKey, RsaPublicCryptoKey} = require('../keys')
+const { getPublicKey, getPrivateKey } = require('../keys')
 
 /**
  * Test data
@@ -32,16 +31,6 @@ const compactUnsecured = 'eyJhbGciOiJub25lIn0.eyJpc3MiOiJodHRwczovL2ZvcmdlLmFudm
  * Tests
  */
 describe('JWT', () => {
-
-  /**
-   * schema
-   */
-  describe('schema', () => {
-    it('should return JWTSchema', () => {
-      JWT.schema.should.equal(JWTSchema)
-    })
-  })
-
   /**
    * static decode
    */
@@ -85,8 +74,9 @@ describe('JWT', () => {
       })
 
       it('should set JWT header', () => {
-        JWT.decode(compact).header
-          .should.eql({ alg: 'RS256', kid: 'r4nd0mbyt3s' })
+        const { header } = JWT.decode(compact)
+        expect(header).to.have.property('alg', 'RS256')
+        expect(header).to.have.property('kid', 'r4nd0mbyt3s')
       })
 
       it('should set JWT payload', () => {
@@ -112,7 +102,7 @@ describe('JWT', () => {
         })
 
         it('should have a header with alg: none', () => {
-          expect(decoded.header).to.eql({ alg: 'none' })
+          expect(decoded.header).to.have.property('alg', 'none')
         })
 
         it('should have a payload', () => {
@@ -194,24 +184,16 @@ describe('JWT', () => {
    * encode
    */
   describe('encode', () => {
-    it('should reject invalid JWT', () => {
-      let jwt = new JWT({
-        header: { alg: 'RS256', kid: 'r4nd0mbyt3s' },
-        payload: { iss: null },
-        key: RsaPrivateCryptoKey
-      })
-
-      return jwt.encode().should.be.rejected()
-    })
-
-    it('should resolve a JWS Compact Serialization', () => {
-      let jwt = new JWT({
+    it('should resolve a JWS Compact Serialization', async () => {
+      const jwt = new JWT({
         header: { alg: 'RS256', kid: 'r4nd0mbyt3s' },
         payload: { iss: 'https://forge.anvil.io' },
-        key: RsaPrivateCryptoKey
+        key: await getPrivateKey()
       })
 
-      return jwt.encode().should.eventually.equal(compact)
+      const result = await jwt.encode()
+
+      result.should.equal(compact)
     })
 
     describe('unsecured (alg: none)', () => {
@@ -233,17 +215,17 @@ describe('JWT', () => {
    * verify
    */
   describe('verify', () => {
-    it('should reject invalid JWT', () => {
+    it('should reject invalid JWT', async () => {
       let jwt = new JWT({
         header: { alg: 'RS256', kid: 'r4nd0mbyt3s' },
         payload: { iss: null },
-        key: RsaPrivateCryptoKey
+        key: await getPrivateKey()
       })
 
       return jwt.verify().should.be.rejected()
     })
 
-    it('should resolve a boolean', () => {
+    it('should resolve a boolean', async () => {
       let jwt = new JWT({
         segments: [
           'eyJhbGciOiJSUzI1NiIsImtpZCI6InI0bmQwbWJ5dDNzIn0',
@@ -253,7 +235,7 @@ describe('JWT', () => {
         header: { alg: 'RS256', kid: 'r4nd0mbyt3s' },
         payload: { iss: 'https://forge.anvil.io' },
         signature,
-        key: RsaPublicCryptoKey
+        key: await getPublicKey()
       })
 
       return jwt.verify().should.eventually.equal(true)
@@ -281,7 +263,7 @@ describe('JWT', () => {
           })
       })
 
-      it('should throw an error when a key is given', done => {
+      it('should throw an error when a key is given', async () => {
         let jwt = new JWT({
           segments: [
             'eyJhbGciOiJub25lIn0',
@@ -291,17 +273,21 @@ describe('JWT', () => {
           header: { alg: 'none' },
           payload: { iss: 'https://forge.anvil.io' },
           signature,
-          key: RsaPublicCryptoKey
+          key: await getPublicKey()
         })
 
-        jwt.verify()
-          .catch(err => {
-            expect(err).to.match(/Key provided to verify signature with alg: none/)
-            done()
-          })
+        let thrownError
+
+        try {
+          await jwt.verify()
+        } catch (error) {
+          thrownError = error
+        }
+
+        expect(thrownError).to.match(/Key provided to verify signature with alg: none/)
       })
 
-      it('should throw an error when a signature is present', done => {
+      it('should throw an error when a signature is present', async () => {
         let signature = 'whatever'
         let jwt = new JWT({
           segments: [
@@ -312,14 +298,18 @@ describe('JWT', () => {
           header: { alg: 'none' },
           payload: { iss: 'https://forge.anvil.io' },
           signature,
-          key: RsaPublicCryptoKey
+          key: await getPublicKey()
         })
 
-        jwt.verify()
-          .catch(err => {
-            expect(err).to.match(/Signature provided to verify with alg: none/)
-            done()
-          })
+        let thrownError
+
+        try {
+          await jwt.verify()
+        } catch (error) {
+          thrownError = error
+        }
+
+        expect(thrownError).to.match(/Signature provided to verify with alg: none/)
       })
     })
   })

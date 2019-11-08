@@ -4,7 +4,7 @@
  * TODO
  * - switch between Node.js webcrypto package and browser implementation
  */
-const base64url = require('base64url')
+// const base64url = require('base64url')
 const supportedAlgorithms = require('../algorithms')
 const {NotSupportedError} = require('../errors')
 
@@ -26,7 +26,7 @@ class JWA {
    *
    * @return {Promise}
    */
-  static sign (alg, key, data) {
+  static async sign (alg, key, data) {
     // normalize the algorithm
     let normalizedAlgorithm = supportedAlgorithms.normalize('sign', alg)
 
@@ -60,7 +60,7 @@ class JWA {
    *
    * @return {Promise}
    */
-  static verify (alg, key, signature, data) {
+  static async verify (alg, key, signature, data) {
     let normalizedAlgorithm = supportedAlgorithms.normalize('verify', alg)
 
     if (normalizedAlgorithm instanceof Error) {
@@ -85,7 +85,7 @@ class JWA {
   /**
    * Import
    */
-  static importKey (key) {
+  static async importKey (key) {
     let normalizedAlgorithm = supportedAlgorithms.normalize('importKey', key.alg)
     return normalizedAlgorithm.importKey(key)
   }

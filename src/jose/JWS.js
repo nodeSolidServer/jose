@@ -3,12 +3,27 @@
  */
 const base64url = require('base64url')
 const JWA = require('./JWA')
-const {DataError} = require('../errors')
+const { DataError } = require('../errors')
+const JOSEHeader = require('./JOSEHeader')
 
 /**
  * JWS
  */
 class JWS {
+  constructor (data = {}) {
+    // compact
+    this.header = new JOSEHeader(data.header)
+    this.payload = data.payload || {}
+    this.signature = data.signature
+
+    // flattened
+    this.protected = data.protected
+
+    // JSON serialization
+    this.signatures = data.signatures
+
+    this.verified = false
+  }
 
   /**
    * sign
@@ -19,7 +34,7 @@ class JWS {
    * @param {Object} token
    * @returns {Promise}
    */
-  static sign (token) {
+  static async sign (token) {
     let payload = base64url(JSON.stringify(token.payload))
 
     // compact serialization
@@ -47,7 +62,7 @@ class JWS {
   /**
    * verify
    */
-  static verify (jwt) {
+  static async verify (jwt) {
     // multiple signatures
     if (jwt.signatures) {
       // ...

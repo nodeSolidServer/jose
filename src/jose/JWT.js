@@ -2,21 +2,30 @@
  * Dependencies
  */
 const base64url = require('base64url')
-const {JSONDocument} = require('@trust/json-document')
-const JWTSchema = require('../schemas/JWTSchema')
 const JWS = require('./JWS')
 const DataError = require('../errors/DataError')
+const JOSEHeader = require('./JOSEHeader')
 
 /**
  * JWT
  */
-class JWT extends JSONDocument {
-
-  /**
-   * schema
-   */
-  static get schema () {
-    return JWTSchema
+class JWT {
+  constructor (data = {}) {
+    this.type = data.type
+    this.segments = data.segments
+    this.header = new JOSEHeader(data.header)
+    this.protected = data.protected
+    this.unprotected = data.unprotected
+    this.iv = data.iv
+    this.aad = data.aad
+    this.ciphertext = data.ciphertext
+    this.tag = data.tag
+    this.recipients = data.recipients
+    this.payload = data.payload
+    this.signatures = data.signatures
+    this.signature = data.signature
+    this.key = data.key
+    this.serialization = data.serialization || 'compact' // default
   }
 
   /**
@@ -128,7 +137,7 @@ class JWT extends JSONDocument {
    *
    * @returns {Promise}
    */
-  static verify (key, token) {
+  static async verify (key, token) {
     let jwt = JWT.decode(token)
     jwt.key = key
     return jwt.verify().then(verified => jwt)
@@ -192,14 +201,7 @@ class JWT extends JSONDocument {
    *
    * @returns {Promise}
    */
-  encode () {
-    // validate
-    let validation = this.validate()
-
-    if (!validation.valid) {
-      return Promise.reject(validation)
-    }
-
+  async encode () {
     let token = this
 
     if (this.isJWE()) {
@@ -217,13 +219,7 @@ class JWT extends JSONDocument {
    *
    * @returns {Promise}
    */
-  verify () {
-    let validation = this.validate()
-
-    if (!validation.valid) {
-      return Promise.reject(validation)
-    }
-
+  async verify () {
     return JWS.verify(this)
   }
 }

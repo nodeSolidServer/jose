@@ -9,7 +9,7 @@ const chai = require('chai')
  * Assertions
  */
 chai.should()
-let expect = chai.expect
+// let expect = chai.expect
 
 /**
  * Code under test

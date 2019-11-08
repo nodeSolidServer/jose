@@ -5,7 +5,7 @@
  * @ignore
  */
 const base64url = require('base64url')
-const crypto = require('@trust/webcrypto')
+const crypto = require('isomorphic-webcrypto')
 const TextEncoder = require('../text-encoder')
 
 /**
@@ -85,7 +85,7 @@ class RSASSA_PKCS1_v1_5 {
    * @param {JWK} key
    * @returns {Promise}
    */
-  importKey (key) {
+  async importKey (key) {
     let jwk = Object.assign({}, key)
     let algorithm = this.params
     let usages = key['key_ops'] || []

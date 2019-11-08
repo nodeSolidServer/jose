@@ -5,7 +5,6 @@
 - [x] Based on Webcrypto API
 - [ ] CryptoKey as expected key argument
 - [x] Isomorphic (Node.js and Browser)
-- [ ] JWT Header and Payload Validation with JSON Schema
 - [ ] Extensible JWT/JWS/JWE classes
 
 ## Dependencies
@@ -86,4 +85,7 @@ $ npm run karma
 
 ## MIT License
 
+[The MIT License](LICENSE.md)
+
 Copyright (c) 2016 Anvil Research, Inc.
+Copyright (c) 2017-2019 The Solid Project

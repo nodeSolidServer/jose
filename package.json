@@ -2,21 +2,18 @@
   "name": "@solid/jose",
   "version": "0.1.8",
   "description": "JSON Object Signing and Encryption",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "directories": {
     "test": "test"
   },
   "files": [
-    "lib",
+    "src",
     "dist"
   ],
   "scripts": {
-    "build-lib": "babel src -d lib",
-    "build": "npm run clean-lib && npm run build-lib",
-    "clean-lib": "rm -rf lib/*",
     "build-dist": "webpack --progress",
-    "dist": "npm run build && npm run build-dist",
-    "prepare": "npm run build && npm run build-dist",
+    "dist": "npm run build-dist",
+    "prepare": "npm run build-dist",
     "test": "mocha test",
     "jsdoc": "jsdoc -c jsdoc.json -r"
   },
@@ -47,10 +44,9 @@
   },
   "homepage": "https://github.com/solid/jose#README",
   "dependencies": {
+    "@sinonjs/text-encoding": "^0.7.1",
     "base64url": "^3.0.0",
-    "@trust/json-document": "^0.1.4",
-    "text-encoding": "^0.6.4",
-    "@trust/webcrypto": "^0.9.2"
+    "isomorphic-webcrypto": "^2.3.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -58,7 +54,7 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
-    "mocha": "^5.2.0",
+    "mocha": "^6.2.2",
     "webpack": "^4.8.3",
     "webpack-cli": "^3.0.2"
   }
