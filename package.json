@@ -45,17 +45,17 @@
   "homepage": "https://github.com/solid/jose#README",
   "dependencies": {
     "@sinonjs/text-encoding": "^0.7.1",
-    "base64url": "^3.0.0",
+    "base64url": "^3.0.1",
     "isomorphic-webcrypto": "^2.3.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
     "mocha": "^6.2.2",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^3.0.2"
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   }
 }
