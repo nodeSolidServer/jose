@@ -1,46 +1,59 @@
-# JSON Object Signing and Encryption (JOSE)
+# JSON Object Signing and Encryption (JOSE) _(@solid/jose)_
 
-## Planned Features
+> Lightweight isomorphic JSON Object Signing and Encryption (JOSE) library for browser and Node.js
 
-- [x] Based on Webcrypto API
-- [ ] CryptoKey as expected key argument
-- [x] Isomorphic (Node.js and Browser)
-- [ ] Extensible JWT/JWS/JWE classes
+## Table of Contents
 
-## Dependencies
+- [Security](#security)
+- [Background](#background)
+- [Install](#install)
+- [Usage](#usage)
+- [License](#license)
 
-This package is a work in progress, dependent on other ongoing projects. Code
-contained herein will be completed when the following dependencies are ready to
-release:
+## Security
 
-- [anvilresearch/webcrypto](https://github.com/anvilresearch/webcrypto)
+TBD
 
-The current contents of the repository should be considered a "sketch".
+## Background
 
-## Scope of implementation
+- Based on Webcrypto API
+- Isomorphic (Node.js and Browser)
 
-- [JWA][jwa] – **RFC7518**
-  - [ ] Cryptographic Algorithms for Digital Signatures and MACs
-  - [ ] Cryptographic Algorithms for Key Management
-  - [ ] Cryptographic Algorithms for Content Encryption
-- [JWK][jwk] – **RFC7517**
-  - [ ] JSON Web Key (JWK) Format
-  - [ ] JWK Set Format
-  - [ ] JSON Web Key (JWK) Thumbprint (RFC7638)
-  - [ ] Conversion from JWK to PEM and PEM to JWK
-- [JWT][jwt] – **RFC7519**
-- [JWS][jws] – **RFC7515**
-- [JWE][jwe] – **RFC7516**
+## Install
 
-[jwa]: https://tools.ietf.org/html/rfc7518
-[jwk]: https://tools.ietf.org/html/rfc7517
-[jwt]: https://tools.ietf.org/html/rfc7519
-[jws]: https://tools.ietf.org/html/rfc7515
-[jwe]: https://tools.ietf.org/html/rfc7516
+Requires Node.js 8+.
 
-## Usage in Browser
+```
+npm install @solid/jose
+```
 
-If you `npm install jose` as a dependency, the Webpack'd minified bundle will be
+## Usage
+
+### Building with Webpack
+
+**Important:**
+If you're using this library as a dependency and you plan to use Webpack, don't
+forget to add the following lines to your `webpack.config.js` `externals:` 
+section:
+
+```js
+  externals: {
+    '@sinonjs/text-encoding': 'TextEncoder',
+    'isomorphic-webcrypto': 'crypto'
+  }
+```
+
+### In Node
+
+```js
+const { JWT } = require('@solid/jose')
+
+const decoded = JWT.decode(data) // throws an error if invalid
+```
+
+### In Browser
+
+If you `npm install @solid/jose` as a dependency, the Webpack'd minified bundle will be
 available in the `dist/` directory as `jose.min.js`.
 
 If you're actively developing/testing this lib, you can `npm run dist`, and the
@@ -69,7 +82,7 @@ Sample usage of JOSE lib in a browser.
 </html>
 ```
 
-## Running tests
+## Testing
 
 ### Nodejs
 
@@ -77,13 +90,7 @@ Sample usage of JOSE lib in a browser.
 $ npm test
 ```
 
-### Browser (karma)
-
-```bash
-$ npm run karma
-```
-
-## MIT License
+## License
 
 [The MIT License](LICENSE.md)
 
