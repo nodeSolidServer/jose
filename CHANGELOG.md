@@ -1,4 +1,4 @@
-## v2.0
+## v0.5.0
 
 ### Changed
 - (BREAKING) Moved package.json `main:` to `src/` instead of `lib/` (no longer
