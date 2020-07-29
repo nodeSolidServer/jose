@@ -5,7 +5,7 @@
  * @ignore
  */
 const base64url = require('base64url')
-const crypto = require('isomorphic-webcrypto')
+let crypto = require('../crypto')
 const TextEncoder = require('../text-encoder')
 
 /**
