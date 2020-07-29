@@ -5,13 +5,8 @@
  * @ignore
  */
 const base64url = require('base64url')
-let crypto = require('isomorphic-webcrypto')
+let crypto = require('../crypto')
 const TextEncoder = require('../text-encoder')
-
-// FIXME:
-if (!crypto.subtle && !!crypto.default) {
-  crypto = crypto.default
-}
 
 /**
  * RSASSA-PKCS1-v1_5
