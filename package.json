@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build-dist": "webpack --progress",
+    "build": "npm run build-dist",
     "dist": "npm run build-dist",
     "prepare": "npm run build-dist",
     "test": "mocha --recursive test",
