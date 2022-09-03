@@ -157,6 +157,14 @@ supportedAlgorithms.define('RS512', 'importKey', new RSASSA_PKCS1_v1_5({
   }
 }))
 
+supportedAlgorithms.define('ES256', 'importKey', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-256'
+  },
+  namedCurve: 'P-256'
+}))
+
 /**
  * Export
  */

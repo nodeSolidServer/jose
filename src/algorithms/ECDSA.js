@@ -9,7 +9,7 @@ const crypto = require('isomorphic-webcrypto')
 const TextEncoder = require('../text-encoder')
 
 /**
- * HMAC with SHA-2 Functions
+ * ECDSA with SHA-2 Functions and P Curves
  */
 class ECDSA {
 
@@ -83,6 +83,43 @@ class ECDSA {
     if (key.length < this.bitlength) {
       throw new Error('The key is too short.')
     }
+  }
+
+  /**
+   * importKey
+   * copied from ./RSASSA-PKCS1-v1_5.js, and it works!
+   *
+   * @param {JWK} key
+   * @returns {Promise}
+   */
+  async importKey (key) {
+    let jwk = Object.assign({}, key)
+    let algorithm = this.params
+    let usages = key['key_ops'] || []
+
+    if (key.use === 'sig') {
+      usages.push('verify')
+    }
+
+    if (key.use === 'enc') {
+      // TODO: handle encryption keys
+      return Promise.resolve(key)
+    }
+
+    if (key.key_ops) {
+      usages = key.key_ops
+    }
+
+    return crypto.subtle
+      .importKey('jwk', jwk, algorithm, true, usages)
+      .then(cryptoKey => {
+        Object.defineProperty(jwk, 'cryptoKey', {
+          enumerable: false,
+          value: cryptoKey
+        })
+
+        return jwk
+      })
   }
 }
 
