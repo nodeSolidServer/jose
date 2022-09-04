@@ -4,6 +4,7 @@
 const None = require('./NONE')
 const HMAC = require('./HMAC')
 const RSASSA_PKCS1_v1_5 = require('./RSASSA-PKCS1-v1_5')
+const ECDSA = require('./ECDSA')
 const SupportedAlgorithms = require('./SupportedAlgorithms')
 
 /**
@@ -55,7 +56,14 @@ supportedAlgorithms.define('RS512', 'sign', new RSASSA_PKCS1_v1_5({
     name: 'SHA-512'
   }
 }))
-//supportedAlgorithms.define('ES256', 'sign', {})
+
+supportedAlgorithms.define('ES256', 'sign', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-256'
+  },
+  namedCurve: 'P-256'
+}))
 //supportedAlgorithms.define('ES384', 'sign', {})
 //supportedAlgorithms.define('ES512', 'sign', {})
 //supportedAlgorithms.define('PS256', 'sign', {})
@@ -110,7 +118,14 @@ supportedAlgorithms.define('RS512', 'verify', new RSASSA_PKCS1_v1_5({
     name: 'SHA-512'
   }
 }))
-//supportedAlgorithms.define('ES256', 'verify', {})
+
+supportedAlgorithms.define('ES256', 'verify', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-256'
+  },
+  namedCurve: 'P-256'
+}))
 //supportedAlgorithms.define('ES384', 'verify', {})
 //supportedAlgorithms.define('ES512', 'verify', {})
 //supportedAlgorithms.define('PS256', 'verify', {})
@@ -140,6 +155,14 @@ supportedAlgorithms.define('RS512', 'importKey', new RSASSA_PKCS1_v1_5({
   hash: {
     name: 'SHA-512'
   }
+}))
+
+supportedAlgorithms.define('ES256', 'importKey', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-256'
+  },
+  namedCurve: 'P-256'
 }))
 
 /**
