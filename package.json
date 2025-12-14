@@ -14,7 +14,7 @@
     "build-dist": "webpack --progress",
     "build": "npm run build-dist",
     "dist": "npm run build-dist",
-    "prepare": "npm run build-dist",
+    "prepublishOnly": "npm run build-dist && npm test",
     "test": "mocha --recursive test",
     "jsdoc": "jsdoc -c jsdoc.json -r"
   },
