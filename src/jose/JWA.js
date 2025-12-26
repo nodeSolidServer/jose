@@ -87,6 +87,11 @@ class JWA {
    */
   static async importKey (key) {
     let normalizedAlgorithm = supportedAlgorithms.normalize('importKey', key.alg)
+
+    if (normalizedAlgorithm instanceof Error) {
+      return Promise.reject(new NotSupportedError(key.alg))
+    }
+
     return normalizedAlgorithm.importKey(key)
   }
 }
