@@ -64,8 +64,23 @@ supportedAlgorithms.define('ES256', 'sign', new ECDSA({
   },
   namedCurve: 'P-256'
 }))
-//supportedAlgorithms.define('ES384', 'sign', {})
-//supportedAlgorithms.define('ES512', 'sign', {})
+
+supportedAlgorithms.define('ES384', 'sign', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-384'
+  },
+  namedCurve: 'P-384'
+}))
+
+supportedAlgorithms.define('ES512', 'sign', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-512'
+  },
+  namedCurve: 'P-521'
+}))
+
 //supportedAlgorithms.define('PS256', 'sign', {})
 //supportedAlgorithms.define('PS384', 'sign', {})
 //supportedAlgorithms.define('PS512', 'sign', {})
@@ -126,8 +141,23 @@ supportedAlgorithms.define('ES256', 'verify', new ECDSA({
   },
   namedCurve: 'P-256'
 }))
-//supportedAlgorithms.define('ES384', 'verify', {})
-//supportedAlgorithms.define('ES512', 'verify', {})
+
+supportedAlgorithms.define('ES384', 'verify', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-384'
+  },
+  namedCurve: 'P-384'
+}))
+
+supportedAlgorithms.define('ES512', 'verify', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-512'
+  },
+  namedCurve: 'P-521'
+}))
+
 //supportedAlgorithms.define('PS256', 'verify', {})
 //supportedAlgorithms.define('PS384', 'verify', {})
 //supportedAlgorithms.define('PS512', 'verify', {})
@@ -163,6 +193,22 @@ supportedAlgorithms.define('ES256', 'importKey', new ECDSA({
     name: 'SHA-256'
   },
   namedCurve: 'P-256'
+}))
+
+supportedAlgorithms.define('ES384', 'importKey', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-384'
+  },
+  namedCurve: 'P-384'
+}))
+
+supportedAlgorithms.define('ES512', 'importKey', new ECDSA({
+  name: 'ECDSA',
+  hash: {
+    name: 'SHA-512'
+  },
+  namedCurve: 'P-521'
 }))
 
 /**
